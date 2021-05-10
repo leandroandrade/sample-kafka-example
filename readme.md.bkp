@@ -1,0 +1,63 @@
+Repositório imagens kafka: https://github.com/confluentinc/cp-docker-images/tree/5.3.3-post/examples
+
+### entrar no container:
+docker exec -it kafka-compose_kafka-1_1 bash
+
+### criar um tópico
+kafka-topics \
+    --create \
+    --bootstrap-server localhost:29092 \
+    --replication-factor 3 \
+    --partitions 3 \
+    --topic sales
+
+### listar os tópicos
+kafka-topics \
+    --list \
+    --bootstrap-server localhost:29092
+
+### utilizar producer
+kafka-console-producer \
+    --broker-list localhost:29092 \
+    --topic sales
+
+### utilizar consumer
+kafka-console-consumer \
+    --bootstrap-server localhost:29092 \
+    --topic sales
+
+### utilizar consumer pegando todas as mensagens do tópico desde o início
+kafka-console-consumer \
+    --bootstrap-server localhost:29092 \
+    --topic sales \
+    --from-beginning
+
+### utilizar consumer com grupos
+kafka-console-consumer \
+    --bootstrap-server localhost:29092 \
+    --topic sales \
+    --from-beginning \
+    --group sales_consumers
+
+### overview do topico, partição, leader e replication-factor
+kafka-topics \
+    --describe \
+    --bootstrap-server localhost:29092 \
+    --topic sales
+
+Topic: sales	PartitionCount: 3	ReplicationFactor: 3	Configs:
+
+Topic: sales	Partition: 0	Leader: 2	Replicas: 2,3,1	Isr: 2,3,1
+Topic: sales	Partition: 1	Leader: 3	Replicas: 3,1,2	Isr: 3,1,2
+Topic: sales	Partition: 2	Leader: 1	Replicas: 1,2,3	Isr: 1,2,3
+
+### disposição dos consumers dentro de um group
+kafka-consumer-groups \
+    --group sales_consumers \
+    --bootstrap-server localhost:29092 \
+    --describe
+
+GROUP           TOPIC           PARTITION  CURRENT-OFFSET  LOG-END-OFFSET  LAG             CONSUMER-ID                                                     HOST            CLIENT-ID
+sales_consumers sales           1          15              15              0               sales_consumers-1-7dd50a31-aa96-4d47-9c64-e81e1fe6cb78 /127.0.0.1      consumer-sales_consumers-1
+sales_consumers sales           2          17              17              0               sales_consumers-1-d56429f5-d6d5-4540-97e4-0fbbd50a5c7a /127.0.0.1      consumer-sales_consumers-1
+sales_consumers sales           0          13              13              0               sales_consumers-1-2b12abf1-c97b-41e7-aa5e-714593f729e6 /127.0.0.1      consumer-sales_consumers-1
