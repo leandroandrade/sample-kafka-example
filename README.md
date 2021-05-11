@@ -29,3 +29,16 @@ docker-compose up
 ## Acesso control center
 
 Acesse o endereço: ```http://localhost:9021/```
+
+
+## Typescript
+
+Executar producer:
+```shell
+npx ts-node producer-type.ts
+```
+
+Executar consumer:
+```shell
+npx ts-node consumer-type.ts
+```
